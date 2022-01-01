@@ -1,4 +1,4 @@
-import pygame, time, random
+import pygame, time, random, pygame_textinput
 from button import Button
 from screens import Screens
 
@@ -33,7 +33,7 @@ class Tasks:
 
             ],
             "egirl" : [
-
+                self.uwu
             ]
         }
 
@@ -81,9 +81,11 @@ class Tasks:
 
         if hitted < nb:
             self.screens.defeat()
+            return False
 
         else:
             self.screens.victory()
+            return True
 
 
     def create_bots(self, nb):
@@ -115,3 +117,65 @@ class Tasks:
             
 
             pygame.display.flip()
+
+
+    
+    def socialNetworkUI(self, duration=60, max_chars=50, messages_color=(255,255,255), specific_color=("uwu", (205,96,190))):
+
+        start = time.time()
+        manager = pygame_textinput.TextInputManager(validator = lambda input: len(input) <= max_chars)
+        textinput = pygame_textinput.TextInputVisualizer(manager=manager)
+        textinput.font_color = (255,255,255)
+
+        messages = []
+
+        while time.time() - start <= duration:
+
+            self.screen.fill((69,69,69))
+
+            events = pygame.event.get()
+
+            textinput.update(events)
+            self.screen.blit(textinput.surface, (20,750))
+
+
+
+            for event in events:
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN and textinput.value:
+                    messages.append(textinput.value)
+                    yield textinput.value
+                    textinput.value = ""
+                    textinput.update(events)
+
+
+            for i in range(1, len(messages)+1):
+                if specific_color[0] in messages[-i].lower():
+                    self.screen.blit(self.font.render(messages[-i], True, specific_color[1]), (40, 700-20*i))
+                else:
+                    self.screen.blit(self.font.render(messages[-i], True, messages_color), (40, 700-20*i))
+
+
+            pygame.display.flip()
+            self.clock.tick(60)
+
+
+
+    def uwu(self, duration=60, nb=30):
+
+        uwu_nb = 0
+
+        for message in self.socialNetworkUI(duration=duration, messages_color=(255,255,255)):
+            if "uwu" in message.lower():
+                uwu_nb += 1
+
+                if uwu_nb == nb:
+                    self.screens.victory()
+                    return True
+        
+        self.screens.defeat()
+        return False

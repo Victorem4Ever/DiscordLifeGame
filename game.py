@@ -117,7 +117,7 @@ class Game:
 
 
     def run(self):
-        self.screens.defeat()
+
         if not self.screens.menu():
             return
         
