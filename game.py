@@ -46,6 +46,7 @@ class Game:
         value = 2
         up, down, right, left = (False, False, False, False)
         self.player.old_position = self.player.position.copy()
+        self.player.update()
 
 
         pressed = pygame.key.get_pressed()
@@ -133,8 +134,9 @@ class Game:
             self.group.center(self.player.rect.center)
             self.group.draw(self.screen)
 
-            #if self.player.rect.collidelist(self.walls) > -1:
-                #self.player.move_back()
+            for sprite in self.group.sprites():
+                if sprite.feet.collidelist(self.walls) > -1:
+                    sprite.move_back()
 
             for event in pygame.event.get():
 

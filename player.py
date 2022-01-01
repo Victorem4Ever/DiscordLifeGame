@@ -35,15 +35,17 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.position = [x,y]
         self.old_position = self.position.copy()
+        self.feet = pygame.Rect(0, 0, self.rect.width/2, 12)
 
 
 
     def update(self):
         self.rect.topleft = self.position
+        self.feet.midbottom = self.rect.midbottom
 
 
     def get_image(self, x, y):
-        image = pygame.Surface([96,128])
+        image = pygame.Surface([32,32])
         image.blit(self.sprite_sheet, (0,0), (x,y,32,32))
         return image
 
