@@ -101,7 +101,7 @@ class Tasks:
     def bruteforce(self, duration=600, nb=4):
 
         start = time.time()
-        bg = pygame.image.load("assets/bruteforce.png")
+        bg = pygame.image.load("assets/bruteforce.jpg")
         copy_button = Button((50,120), pygame.image.load("assets/menu/copy.png"), self.screen)
         password = hash("".join(random.sample(list(string.printable), k=nb)))
 
@@ -126,7 +126,6 @@ class Tasks:
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
 
                     if hash(textinput.value) == password:
-                        self.screens.victory()
                         return True
 
                     else:
@@ -142,6 +141,8 @@ class Tasks:
             self.screen.blit(textinput.surface, (50,750))
 
             pygame.display.flip()
+
+        return False
 
 
     
@@ -198,8 +199,6 @@ class Tasks:
                 uwu_nb += 1
 
                 if uwu_nb == nb:
-                    self.screens.victory()
                     return True
         
-        self.screens.defeat()
         return False
