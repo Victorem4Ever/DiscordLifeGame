@@ -1,4 +1,4 @@
-import pygame, time, random, pygame_textinput
+import pygame, time, random, pygame_textinput, string, pyperclip
 from button import Button
 from screens import Screens
 
@@ -12,7 +12,7 @@ class Tasks:
         self.x, self.y = self.screen.get_size()
         self.bot_image = pygame.image.load("assets/bot.png")
         self.font = pygame.font.Font("freesansbold.ttf", 20)
-
+        self.font2 = pygame.font.Font("freesansbold.ttf", 30)
         self.tasks = {
             "raider" : [
                 self.raid_bot
@@ -98,23 +98,48 @@ class Tasks:
 
 
 
-    def bruteforce(self, duration=600, nb=10):
+    def bruteforce(self, duration=600, nb=4):
 
         start = time.time()
         bg = pygame.image.load("assets/bruteforce.png")
+        copy_button = Button((50,120), pygame.image.load("assets/menu/copy.png"), self.screen)
+        password = hash("".join(random.sample(list(string.printable), k=nb)))
+
+        manager = pygame_textinput.TextInputManager(validator = lambda input: len(input) <= nb)
+        textinput = pygame_textinput.TextInputVisualizer(manager=manager,font_color=(255,255,255))
+
 
         while time.time() - start <= duration:
             
             self.screen.blit(bg, (0,0))
             
-            for event in pygame.event.get():
+            events = pygame.event.get()
+
+            textinput.update(events)
+
+            for event in events:
                 
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     return False
 
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+
+                    if hash(textinput.value) == password:
+                        self.screens.victory()
+                        return True
+
+                    else:
+                        textinput.value = ""
+                        textinput.update(events)
+
+            if copy_button.draw():
+                pyperclip.copy(str(password))
+
+
             self.screen.blit(self.font.render(f"TIME LEFT : {'{0:.1f}'.format(duration-(time.time()-start))}s", True, (255,0,0)), (20,30))
-            
+            self.screen.blit(self.font2.render("Hashed password : " + str(password), True, (255,0,0)), (50, 50))
+            self.screen.blit(textinput.surface, (50,750))
 
             pygame.display.flip()
 
@@ -124,8 +149,7 @@ class Tasks:
 
         start = time.time()
         manager = pygame_textinput.TextInputManager(validator = lambda input: len(input) <= max_chars)
-        textinput = pygame_textinput.TextInputVisualizer(manager=manager)
-        textinput.font_color = (255,255,255)
+        textinput = pygame_textinput.TextInputVisualizer(manager=manager, font_color=(255,255,255))
 
         messages = []
 

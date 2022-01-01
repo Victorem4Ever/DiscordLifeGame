@@ -117,6 +117,7 @@ class Game:
 
 
     def run(self):
+        self.task.bruteforce()
 
         if not self.screens.menu():
             return

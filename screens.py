@@ -9,8 +9,8 @@ class Screens:
         self.menu_image = pygame.image.load("assets/menu/menu.jpg")
         self.exit_image = pygame.image.load("assets/menu/exit.png")
         self.play_image = pygame.image.load("assets/menu/play.png")
-        #self.defeat_image = pygame.image.load("assets/menu/defeat.png")
-        #self.victory_image = pygame.image.load("assets/menu/victory.png")
+        self.defeat_image = pygame.image.load("assets/menu/defeat.png")
+        self.victory_image = pygame.image.load("assets/menu/victory.png")
 
 
 
