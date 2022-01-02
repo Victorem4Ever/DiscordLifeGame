@@ -1,4 +1,4 @@
-import pygame, pytmx, pyscroll
+import pygame, pytmx, pyscroll, time
 from player import Player
 from screens import Screens
 from tasks import Tasks
@@ -21,6 +21,9 @@ class Game:
         player_position = tmx_data.get_object_by_name("player")
         self.player = Player(player_position.x, player_position.y)
 
+        self.map = "world"
+        self.house = None
+
         self.frames = {
             "up" : 0,
             "down" : 0,
@@ -35,12 +38,56 @@ class Game:
                 self.walls.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
 
 
-        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=3)
+        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=5)
         self.group.add(self.player)
 
         self.task = Tasks(self.screen)
 
+        self.house_rects = []
+        for i in range(1,8):
+            enter_house = tmx_data.get_object_by_name("enter_house" + str(i))
+            self.house_rects.append((pygame.Rect(enter_house.x, enter_house.y, enter_house.width, enter_house.height), "house" + str(i)))
+        
     
+
+
+    def switch(self, house=None):
+
+        self.house = house if house is not None else self.house
+
+        self.map = "house" if self.map == "world" else "world"
+
+        path = "assets/houses/" + house + ".tmx" if self.map == "house" else "assets/carte.tmx"
+
+        tmx_data = pytmx.load_pygame(path)
+        map_data = pyscroll.data.TiledMapData(tmx_data)
+        map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
+        map_layer.zoom = 3.5
+
+        self.walls = []
+        for obj in tmx_data.objects:
+            if obj.type == "collision":
+                self.walls.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
+
+        self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=5)
+        self.group.add(self.player)
+
+        house_objs = []
+        self.house_rects = []
+        if self.map == "house":
+            house_objs.append((tmx_data.get_object_by_name("exit_house"), None))
+        
+        else:
+            for i in range(1,8):
+                house_objs.append((tmx_data.get_object_by_name("enter_house" + str(i)), "house" + str(i)))
+        
+        for house_obj, house in house_objs:
+            self.house_rects.append((pygame.Rect(house_obj.x, house_obj.y, house_obj.width, house_obj.height), house))
+
+        spawn = tmx_data.get_object_by_name("spawn_house") if self.map == "house" else tmx_data.get_object_by_name("exit_spawn_" + self.house)
+        self.player.position = [spawn.x, spawn.y-20]
+
+
 
     def handle_input(self):
         value = 2
@@ -117,6 +164,7 @@ class Game:
         if not left: self.frames["left"] = 0
 
 
+
     def run(self):
 
         if not self.screens.menu():
@@ -134,9 +182,17 @@ class Game:
             self.group.center(self.player.rect.center)
             self.group.draw(self.screen)
 
+
+            for rec, house in self.house_rects:
+                if self.player.feet.colliderect(rec):
+                    self.switch(house)
+                    break
+
+
             for sprite in self.group.sprites():
                 if sprite.feet.collidelist(self.walls) > -1:
                     sprite.move_back()
+
 
             for event in pygame.event.get():
 
