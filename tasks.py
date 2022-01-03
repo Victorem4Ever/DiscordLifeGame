@@ -52,11 +52,11 @@ class Tasks:
         start = time.time()
         s = time.time()
         bg = pygame.image.load("assets/raid.jpg")
-        hitted = 0
+        hit = 0
 
         self.create_bots(10)
 
-        while time.time() - start <= duration and hitted < nb:
+        while time.time() - start <= duration and hit < nb:
             
             self.screen.blit(bg, (0,0))
 
@@ -70,9 +70,7 @@ class Tasks:
             for i in range(len(self.bots)):
                 if self.bots[i] is not None and self.bots[i].draw():
                     self.bots[i] = None
-                    hitted += 1
-                    print(hitted)
-                    print(time.time()-start)
+                    hit += 1
 
 
             if time.time() - s >= 1:
@@ -82,19 +80,17 @@ class Tasks:
 
 
             self.screen.blit(self.font.render(f"TIME LEFT : {'{0:.1f}'.format(duration-(time.time()-start))}s", True, (255,0,0)), (20,30))
-            self.screen.blit(self.font.render(f"BOT(S) LEFT : {nb-hitted} bot(s)", True, (255,0,0)), (20,80))
+            self.screen.blit(self.font.render(f"BOT(S) LEFT : {nb-hit} bot(s)", True, (255,0,0)), (20,80))
 
             pygame.display.flip()
             self.clock.tick(60)
 
         self.bots = []
 
-        if hitted < nb:
-            self.screens.defeat()
+        if hit < nb:
             return False
 
         else:
-            self.screens.victory()
             return True
 
 
