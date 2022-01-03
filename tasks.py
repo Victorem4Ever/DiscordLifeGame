@@ -38,6 +38,15 @@ class Tasks:
             ]
         }
 
+        self.pygame_images = {
+            "if" : pygame.image.load("assets/dev_buttons/if.png"),
+            "else" : pygame.image.load("assets/dev_buttons/else.png"),
+            "variable" : pygame.image.load("assets/dev_buttons/variable.png"),
+            "start" : pygame.image.load("assets/dev_buttons/start.png"),
+            "end" : pygame.image.load("assets/dev_buttons/end.png"),
+            "print" : pygame.image.load("assets/dev_buttons/print.png")
+        }
+
 
     def raid_bot(self, duration=60, nb=200):
         start = time.time()
@@ -208,13 +217,27 @@ class Tasks:
     
     def dev_bot(self):
 
-        button = Button((90,57), self.bot_image, self.screen)
-        dnd = DragAndDrop(button)
+        buttons = {}
+        inst = ["if", "print", "else", "variable", "start", "end"]
+        for i in range(len(inst)):
+            buttons[inst[i]] = Button((10, 5 * i + 20), pygame.image.load("assets/dev_buttons/" + inst[i] + ".png"), self.screen)
+
+        dragNdrops = []
+        btn = []
 
         while 1:
             self.screen.fill((69,69,69))
             events = pygame.event.get()
-            dnd.update(events)
+            
+            for dnd in dragNdrops:
+                dnd.update(events)
+
+            for i in inst:
+                if buttons[i].draw():
+                    x = Button((350,350), self.pygame_images[i], self.screen)
+                    btn.append(x)
+                    dragNdrops.append(DragAndDrop(x))
+
 
             for event in events:
                 if event.type == pygame.QUIT:
@@ -223,8 +246,3 @@ class Tasks:
 
             pygame.display.flip()
             self.clock.tick(60)
-
-        buttons = {}
-        inst = ["if", "print", "else", "variable", "start", "end"]
-        for i in range(len(inst)):
-            buttons[inst[i]] = Button((10, 5 * i + 20), pygame.image.load("assets/dev_buttons/" + inst[i] + ".png"), self.screen)
