@@ -15,7 +15,7 @@ class Tasks:
         self.font2 = pygame.font.Font("freesansbold.ttf", 30)
         self.tasks = {
             "raider" : [
-                self.raid_bot
+
             ],
             "dev" : [
 
@@ -24,7 +24,7 @@ class Tasks:
                 self.bruteforce
             ],
             "modo" : [
-
+                self.raid_bot
             ],
             "fonda" : [
 

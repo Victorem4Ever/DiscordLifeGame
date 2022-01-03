@@ -1,4 +1,4 @@
-import pygame, pytmx, pyscroll, time
+import pygame, pytmx, pyscroll
 from player import Player
 from screens import Screens
 from tasks import Tasks
