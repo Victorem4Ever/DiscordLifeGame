@@ -1,6 +1,7 @@
 import pygame, time, random, pygame_textinput, string, pyperclip
 from button import Button
 from screens import Screens
+from dragAndDrop import DragAndDrop
 
 class Tasks:
 
@@ -202,3 +203,28 @@ class Tasks:
                     return True
         
         return False
+
+
+    
+    def dev_bot(self):
+
+        button = Button((90,57), self.bot_image, self.screen)
+        dnd = DragAndDrop(button)
+
+        while 1:
+            self.screen.fill((69,69,69))
+            events = pygame.event.get()
+            dnd.update(events)
+
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    break
+
+            pygame.display.flip()
+            self.clock.tick(60)
+
+        buttons = {}
+        inst = ["if", "print()", "else", "variable"]
+        for i in range(len(inst)):
+            buttons[inst[i]] = Button((10, 5 * i + 20), pygame.image.load("assets/dev_buttons/" + inst[i] + ".png"), self.screen)
