@@ -225,6 +225,6 @@ class Tasks:
             self.clock.tick(60)
 
         buttons = {}
-        inst = ["if", "print()", "else", "variable"]
+        inst = ["if", "print", "else", "variable", "start", "end"]
         for i in range(len(inst)):
             buttons[inst[i]] = Button((10, 5 * i + 20), pygame.image.load("assets/dev_buttons/" + inst[i] + ".png"), self.screen)
