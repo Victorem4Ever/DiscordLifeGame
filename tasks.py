@@ -49,18 +49,27 @@ class Tasks:
 
 
     def raid_bot(self, duration=60, nb=200):
+        """
+        A task where the player needs to destroy a number of bot
+        (200 as default) in a duration time of 60 as default.
+        """
+
+
         start = time.time()
         s = time.time()
         bg = pygame.image.load("assets/raid.jpg")
         hit = 0
 
-        self.create_bots(10)
+        # Generate 10 bots
+        for _ in range(10):
+            pos = (random.randint(0, self.x-20), random.randint(0, self.y-20))
+            self.bots.append(Button(pos, self.bot_image, self.screen))
 
         while time.time() - start <= duration and hit < nb:
             
             self.screen.blit(bg, (0,0))
 
-
+            # Event loop
             for event in pygame.event.get():
 
                 if event.type == pygame.QUIT:
@@ -73,9 +82,13 @@ class Tasks:
                     hit += 1
 
 
+            # Generate 5 bots all the 1 second
             if time.time() - s >= 1:
                 s = time.time()
-                self.create_bots(5)
+
+                for _ in range(5):
+                    pos = (random.randint(0, self.x-20), random.randint(0, self.y-20))
+                    self.bots.append(Button(pos, self.bot_image, self.screen))
 
 
 
@@ -94,17 +107,14 @@ class Tasks:
             return True
 
 
-    def create_bots(self, nb):
-
-        for _ in range(nb):
-            pos = (random.randint(0, self.x-20), random.randint(0, self.y-20))
-            self.bots.append(Button(pos, self.bot_image, self.screen))
-
-
-
-
 
     def bruteforce(self, duration=600, nb=4):
+        """
+        A task where the player needs to bruteforce a password of a number of chars (4 as default)
+        with simply an hashed version of this password.
+        He has a maximum duration time (600 secondes as default)
+        """
+
 
         start = time.time()
         bg = pygame.image.load("assets/bruteforce.jpg")
@@ -153,13 +163,17 @@ class Tasks:
 
     
     def socialNetworkUI(self, duration=60, max_chars=50, messages_color=(255,255,255), specific_color=("uwu", (205,96,190))):
-
+        """
+        A generator that return the messages typed in the textinput.
+        It's a simple social network user interface
+        """
         start = time.time()
         manager = pygame_textinput.TextInputManager(validator = lambda input: len(input) <= max_chars)
         textinput = pygame_textinput.TextInputVisualizer(manager=manager, font_color=(255,255,255))
 
         messages = []
 
+        # Main loop
         while time.time() - start <= duration:
 
             self.screen.fill((69,69,69))
@@ -170,7 +184,7 @@ class Tasks:
             self.screen.blit(textinput.surface, (20,750))
 
 
-
+            # Event loop
             for event in events:
 
                 if event.type == pygame.QUIT:
@@ -183,7 +197,7 @@ class Tasks:
                     textinput.value = ""
                     textinput.update(events)
 
-
+            # Display the messages in the "chat"
             for i in range(1, len(messages)+1):
                 if specific_color[0] in messages[-i].lower():
                     self.screen.blit(self.font.render(messages[-i], True, specific_color[1]), (40, 700-20*i))
@@ -197,6 +211,11 @@ class Tasks:
 
 
     def uwu(self, duration=60, nb=30):
+        """
+        A task where the player needs to type UwU a number of times
+        (30 as default value) in a duration time (60 seconds as default value)
+        """
+
 
         uwu_nb = 0
 
@@ -212,29 +231,54 @@ class Tasks:
 
     
     def dev_bot(self):
+        """
+        A task where the player needs to create a script who do something
+        when there is a too important number of messages
+        """
 
+
+        # create instruction buttons
         buttons = {}
         inst = ["if", "print", "else", "variable", "start", "end"]
         for i in range(len(inst)):
             buttons[inst[i]] = Button((10, 100 * i + 20), pygame.image.load("assets/dev_buttons/" + inst[i] + ".png"), self.screen)
 
         dragNdrops = []
-        btn = []
+        clicked_btn = False
+        linked = []
 
+        # main loop
         while 1:
             self.screen.fill((69,69,69))
             events = pygame.event.get()
             
-            for dnd in dragNdrops:
-                dnd.update(events)
+            # update the drag & drop buttons
+            for dnd, instruction in dragNdrops:
+                if dnd.update(events):
+
+                    # Check to link buttons
+                    if not clicked_btn:
+                        clicked_btn = (dnd.button, instruction)
+
+                    else:
+                        if clicked_btn != dnd.button:
+                            linked.append((clicked_btn, (dnd.button, instruction)))
+
+                        clicked_btn = False
+
 
             for i in inst:
                 if buttons[i].draw():
                     x = Button((350,350), self.pygame_images[i], self.screen)
-                    btn.append(x)
-                    dragNdrops.append(DragAndDrop(x))
+                    dragNdrops.append((DragAndDrop(x), i))
 
 
+            # Edit the links
+            for button1, button2 in linked:
+                pygame.draw.line(self.screen, (255,0,0), button1[0].rect.topleft, button2[0].rect.topleft)
+
+
+            # Event loop
             for event in events:
                 if event.type == pygame.QUIT:
                     pygame.quit()

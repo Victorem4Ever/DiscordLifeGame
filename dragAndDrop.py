@@ -12,8 +12,11 @@ class DragAndDrop:
     
     def update(self, events):
 
+        clicked = False
+
         if self.button.draw():
             self.drag = True
+            clicked = True
 
 
         for event in events:
@@ -23,3 +26,5 @@ class DragAndDrop:
 
             elif event.type == pygame.MOUSEMOTION and self.drag:
                 self.button.rect.x, self.button.rect.y = event.pos
+
+        return clicked
