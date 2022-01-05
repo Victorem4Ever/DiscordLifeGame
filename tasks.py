@@ -246,6 +246,7 @@ class Tasks:
         dragNdrops = []
         clicked_btn = False
         linked = []
+        reset = False
 
         # main loop
         while 1:
@@ -253,18 +254,34 @@ class Tasks:
             events = pygame.event.get()
             
             # update the drag & drop buttons
+            reset = False
             for dnd, instruction in dragNdrops:
-                if dnd.update(events):
+                click = dnd.update(events)
+                if click[0]:
 
                     # Check to link buttons
                     if not clicked_btn:
                         clicked_btn = (dnd.button, instruction)
+                        reset = False
 
                     else:
-                        if clicked_btn != dnd.button:
-                            linked.append((clicked_btn, (dnd.button, instruction)))
+                        if clicked_btn[0] != dnd.button:
+                            popped = False
+                            for i in range(len(linked)):
+                                if linked[i] in (((dnd.button, instruction), clicked_btn) in linked, (clicked_btn, (dnd.button, instruction)) in linked):
+                                    linked.pop(i)
+                                    popped = True
+
+                            if not popped: linked.append((clicked_btn, (dnd.button, instruction)))
 
                         clicked_btn = False
+                        
+
+                elif click[1]:
+                    
+                    reset = True
+            
+            if reset: clicked_btn = False
 
 
             for i in inst:
@@ -275,7 +292,7 @@ class Tasks:
 
             # Edit the links
             for button1, button2 in linked:
-                pygame.draw.line(self.screen, (255,0,0), button1[0].rect.topleft, button2[0].rect.topleft)
+                pygame.draw.line(self.screen, (255,0,0), button1[0].rect.midbottom, button2[0].rect.midtop)
 
 
             # Event loop
