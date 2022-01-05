@@ -1,4 +1,4 @@
-import pygame, pytmx, pyscroll
+import pygame, pytmx, pyscroll, json
 from player import Player
 from screens import Screens
 from tasks import Tasks
@@ -19,7 +19,7 @@ class Game:
         map_layer.zoom = 3.5
 
         player_position = tmx_data.get_object_by_name("player")
-        self.player = Player(player_position.x, player_position.y)
+        self.player = Player(player_position.x, player_position.y, self.screen)
 
         self.map = "world"
         self.house = None
@@ -42,6 +42,7 @@ class Game:
         self.group.add(self.player)
 
         self.task = Tasks(self.screen)
+        self.task_panels = []
 
         self.house_rects = []
         for i in range(1,8):
@@ -68,6 +69,9 @@ class Game:
         for obj in tmx_data.objects:
             if obj.type == "collision":
                 self.walls.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
+
+            elif obj.type == "task_panel":
+                self.task_panels.append((pygame.Rect(obj.x, obj.y, obj.width, obj.height), self.task.tasks[self.player.infos["name"]][int(house[-1])]))
 
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=5)
         self.group.add(self.player)
@@ -152,6 +156,14 @@ class Game:
             
             left = True
         
+
+        if pressed[pygame.K_ESCAPE]:
+            
+            if not self.screens.menu():
+                self.save()
+                pygame.quit()
+                return False
+
         self.player.image.set_colorkey([0,0,0])
 
 
@@ -163,21 +175,32 @@ class Game:
 
         if not left: self.frames["left"] = 0
 
+        return True
+
+
+
+    def save(self):
+        
+        if not self.player.infos: return
+
+        with open(self.player.infos["path"], "w") as file:
+            json.dump(self.player.infos, file)
+            file.close()
+
 
 
     def run(self):
 
 
-        if not self.screens.menu():
-            return
-        
-        self.screens.load_game()
+        if not self.player.started: return
+        if not self.player.infos: return
+        self.save()
 
 
         clock = pygame.time.Clock()
         running = True
         while running:
-            self.handle_input()
+            if not self.handle_input(): return
 
             self.group.update()
             self.group.center(self.player.rect.center)
@@ -193,6 +216,15 @@ class Game:
             for sprite in self.group.sprites():
                 if sprite.feet.collidelist(self.walls) > -1:
                     sprite.move_back()
+
+
+            for rec, task in self.task_panels:
+                if self.player.feet.colliderect(rec):
+                    if task():
+                        self.player.infos["wins"] += 1
+                    
+                    else:
+                        self.player.infos["defeats"] += 1
 
 
             for event in pygame.event.get():

@@ -16,25 +16,67 @@ class Tasks:
         self.font2 = pygame.font.Font("freesansbold.ttf", 30)
         self.tasks = {
             "raider" : [
-
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing
             ],
             "dev" : [
-
+                self.dev_bot,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing
             ],
             "hacker" : [
-                self.bruteforce
+                self.bruteforce,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing
             ],
             "modo" : [
-                self.raid_bot
+                self.raid_bot,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing
             ],
             "fonda" : [
-
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing
             ],
-            "membre" : [
-
+            "member" : [
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing
             ],
             "egirl" : [
-                self.uwu
+                self.uwu,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing,
+                self.nothing
             ]
         }
 
@@ -302,3 +344,8 @@ class Tasks:
 
             pygame.display.flip()
             self.clock.tick(60)
+
+    
+
+    def nothing(self):
+        pass

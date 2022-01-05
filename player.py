@@ -1,10 +1,15 @@
 import pygame
+from screens import Screens
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, screen):
         super().__init__()
-        self.sprite_sheet = pygame.image.load("assets/players/player.png")
+
+        self.infos = Screens(screen).load_game()
+        self.started = True if self.infos else False
+
+        self.sprite_sheet = pygame.image.load("assets/players/" + self.infos["name"] + ".png")
         
         self.animations = {
             "down" : [
