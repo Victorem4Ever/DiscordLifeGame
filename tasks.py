@@ -268,18 +268,17 @@ class Tasks:
                         if clicked_btn[0] != dnd.button:
                             popped = False
                             for i in range(len(linked)):
-                                if linked[i] in (((dnd.button, instruction), clicked_btn) in linked, (clicked_btn, (dnd.button, instruction)) in linked):
+                                if (linked[i][0] == (dnd.button, instruction) or linked[i][0] == clicked_btn) and (linked[i][1] == (dnd.button, instruction) or linked[i][1] == clicked_btn):
                                     linked.pop(i)
                                     popped = True
+                                    break
 
                             if not popped: linked.append((clicked_btn, (dnd.button, instruction)))
 
                         clicked_btn = False
                         
 
-                elif click[1]:
-                    
-                    reset = True
+                elif click[1]: reset = True
             
             if reset: clicked_btn = False
 
