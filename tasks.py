@@ -345,6 +345,45 @@ class Tasks:
             pygame.display.flip()
             self.clock.tick(60)
 
+
+
+    def terminalUi(self, duration=600, max_chars=100, commands=[]):
+
+        start = time.time()
+        manager = pygame_textinput.TextInputManager(validator = lambda input: len(input) <= max_chars)
+        textinput = pygame_textinput.TextInputVisualizer(manager=manager, font_color=(255,255,255))
+        self.messages = []
+        textinput.cursor_color = (255,255,255)
+
+        while time.time() - start <= duration:
+
+            self.screen.fill((0,0,0))
+
+            events = pygame.event.get()
+
+            textinput.update(events)
+
+            for event in events:
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return False
+
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                    self.messages.append("$ " + textinput.value)
+                    yield textinput.value
+                    textinput.value = ""
+                    textinput.update(events)
+
+            self.screen.blit(textinput.surface, (20,750))
+
+            for i in range(len(self.messages)-1, -1, -1):
+                message = self.messages[i]
+                color = (240, 236, 7) if message[2:] in commands else (255,255,255)
+                self.screen.blit(self.font.render(message, True, color), (50, 650 - (len(self.messages)-i) * 50))
+
+            pygame.display.flip()
+            self.clock.tick(60)
     
 
     def nothing(self):
