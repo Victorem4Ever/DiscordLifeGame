@@ -1,4 +1,10 @@
-import pygame, time, random, pygame_textinput, string, pyperclip
+import pygame
+import pygame_textinput
+import time
+import random
+import string
+import pyperclip
+
 from button import Button
 from screens import Screens
 from dragAndDrop import DragAndDrop
@@ -289,15 +295,22 @@ class Tasks:
         clicked_btn = False
         linked = []
         reset = False
+        bin = Button((650,650), pygame.image.load("assets/menu/bin.png"), self.screen)
+        bin_clicked = False
 
         # main loop
         while 1:
             self.screen.fill((69,69,69))
             events = pygame.event.get()
             
+            bin_clicked = time.time() if bin.draw() else bin_clicked
+
+
             # update the drag & drop buttons
             reset = False
-            for dnd, instruction in dragNdrops:
+            for k in range(len(dragNdrops)):
+
+                dnd, instruction = dragNdrops[k]
                 click = dnd.update(events)
                 if click[0]:
 
@@ -307,7 +320,23 @@ class Tasks:
                         reset = False
 
                     else:
-                        if clicked_btn[0] != dnd.button:
+
+                        if bin_clicked and bin_clicked - time.time() <= 5:
+
+                            bin_clicked = False
+
+
+                            for i in range(len(linked)-1, -1, -1):
+
+                                if (dnd, instruction) in linked[i]:
+                                    
+                                    linked.pop(i)
+
+                            dragNdrops.pop(k)
+                            break
+
+
+                        elif clicked_btn[0] != dnd.button:
                             popped = False
                             for i in range(len(linked)):
                                 if (linked[i][0] == (dnd.button, instruction) or linked[i][0] == clicked_btn) and (linked[i][1] == (dnd.button, instruction) or linked[i][1] == clicked_btn):
