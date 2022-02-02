@@ -418,13 +418,13 @@ class Tasks:
     def cheat(self, duration=3600):
 
         start = time.time()
-        edit_me = 0
+        edit_me = "MY NEW VALUE NEEDS TO BE '69' (string) IF YOU WANT TO WIN"
 
         while time.time() - start <= duration:
 
             self.screen.fill((69,69,69))
 
-            if edit_me == 69:
+            if edit_me == "69":
                 return True
 
             for event in pygame.event.get():
