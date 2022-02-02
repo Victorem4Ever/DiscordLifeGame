@@ -41,7 +41,7 @@ class Tasks:
             ],
             "hacker" : [
                 self.bruteforce,
-                self.nothing,
+                self.cheat,
                 self.nothing,
                 self.nothing,
                 self.nothing,
@@ -414,6 +414,33 @@ class Tasks:
             pygame.display.flip()
             self.clock.tick(60)
     
+
+    def cheat(self, duration=3600):
+
+        start = time.time()
+        edit_me = 0
+
+        while time.time() - start <= duration:
+
+            self.screen.fill((69,69,69))
+
+            if edit_me == 69:
+                return True
+
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return False
+
+            self.screen.blit(pygame.font.Font("freesansbold.ttf", 50).render("Time left : " + str(round(duration - (time.time() - start))) + " seconds", True, (255, 0, 0)), (100, 350))
+
+            pygame.display.flip()
+            self.clock.tick(60)
+
+        return False
+
+
 
     def nothing(self):
         pass
