@@ -1,4 +1,4 @@
-import pygame, pytmx, pyscroll, json
+import pygame, pytmx, pyscroll, json, time
 from player import Player
 from screens import Screens
 from tasks import Tasks
@@ -48,9 +48,11 @@ class Game:
         self.house_rects = []
         for i in range(1,8):
             enter_house = tmx_data.get_object_by_name("enter_house" + str(i))
-            self.house_rects.append((pygame.Rect(enter_house.x, enter_house.y, enter_house.width, enter_house.height), "house" + str(i)))
+            self.house_rects.append((pygame.Rect(enter_house.x, enter_house.y, enter_house.width, enter_house.height), "house" + str(i-1)))
         
-        self.radar = Radar(self.screen, self.player.position)
+        self.radar = Radar(self.screen, side=1)
+        self.stopped_since = time.time()
+
     
 
 
@@ -180,6 +182,9 @@ class Game:
 
         if not left: self.frames["left"] = 0
 
+        if up or down or right or left:
+            self.stopped_since = time.time()
+
         return True
 
 
@@ -224,7 +229,10 @@ class Game:
                 if sprite.feet.collidelist(self.walls) > -1:
                     sprite.move_back()
 
-            self.radar.update(self.player.position)
+
+            if time.time() - self.stopped_since < 3:
+                self.radar.update(self.player.position)
+
 
             for rec, task in self.task_panels:
                 if self.player.feet.colliderect(rec):

@@ -1,9 +1,8 @@
 import pygame
-from player import Player
 
 class Radar:
 
-    def __init__(self, screen, player_position, side=0, pos=None, size=(800, 800), map="assets/map_radar.png"):
+    def __init__(self, screen, side=0, pos=None, map="assets/map_radar.png"):
         """
         1 Means topright
         2 Means bottomleft
@@ -17,13 +16,13 @@ class Radar:
 
         if self.radar_pos is None:
             if side == 1:
-                self.radar_pos = (700, 20)
+                self.radar_pos = (620, 20)
 
             elif side == 2:
-                self.radar_pos = (20, 700)
+                self.radar_pos = (20, 620)
 
             elif side == 3:
-                self.radar_pos = (700, 700)
+                self.radar_pos = (620, 620)
 
             else:
                 self.radar_pos = (20, 20)
