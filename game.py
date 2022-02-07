@@ -2,6 +2,7 @@ import pygame, pytmx, pyscroll, json
 from player import Player
 from screens import Screens
 from tasks import Tasks
+from radar import Radar
 
 
 class Game:
@@ -49,6 +50,7 @@ class Game:
             enter_house = tmx_data.get_object_by_name("enter_house" + str(i))
             self.house_rects.append((pygame.Rect(enter_house.x, enter_house.y, enter_house.width, enter_house.height), "house" + str(i)))
         
+        self.radar = Radar(self.screen, self.player.position)
     
 
 
@@ -90,6 +92,9 @@ class Game:
 
         spawn = tmx_data.get_object_by_name("spawn_house") if self.map == "house" else tmx_data.get_object_by_name("exit_spawn_" + self.house)
         self.player.position = [spawn.x, spawn.y-20]
+
+        path = "assets/map_radar.png" if self.map == "world" else "assets/house_radar.png"
+        self.radar.switch(path)
 
 
 
@@ -207,6 +212,8 @@ class Game:
             self.group.draw(self.screen)
 
 
+
+
             for rec, house in self.house_rects:
                 if self.player.feet.colliderect(rec):
                     self.switch(house)
@@ -217,6 +224,7 @@ class Game:
                 if sprite.feet.collidelist(self.walls) > -1:
                     sprite.move_back()
 
+            self.radar.update(self.player.position)
 
             for rec, task in self.task_panels:
                 if self.player.feet.colliderect(rec):
