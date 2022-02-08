@@ -186,7 +186,7 @@ class Screens:
                         "wins" : 0,
                         "defeats" : 0,
                         "old_players" : [],
-                        "easter_egg" : True
+                        "easter_egg" : False
                     }
                     with open("setting_files.json", "r") as read_file:
                         try:
