@@ -18,6 +18,8 @@ class Screens:
 
     def defeat(self):
 
+        self.stop_music()
+
         self.play_button = Button((400,400), self.play_image, self.screen)
         self.exit_button = Button((120,200), self.exit_image, self.screen)
 
@@ -50,6 +52,8 @@ class Screens:
 
     def victory(self):
 
+        self.stop_music()
+
         self.play_button = Button((400,400), self.play_image, self.screen)
         self.exit_button = Button((120,200), self.exit_image, self.screen)
 
@@ -81,6 +85,8 @@ class Screens:
 
 
     def menu(self):
+
+        self.stop_music()
 
         self.exit_button = Button((400,400), self.exit_image, self.screen)
         self.play_button = Button((120,200), self.play_image, self.screen)
@@ -156,7 +162,7 @@ class Screens:
 
     
     def create_game(self):
-        
+
         btn = []
 
         btn.append((Button((10,10), pygame.image.load("assets/players_logo/raider.png"), self.screen), "raider"))
@@ -202,3 +208,8 @@ class Screens:
 
             pygame.display.flip()
             self.clock.tick(60)
+
+
+    def stop_music(self):
+
+        self.music.stop()

@@ -11,7 +11,7 @@ from dragAndDrop import DragAndDrop
 
 class Tasks:
 
-    def __init__(self, screen):
+    def __init__(self, screen, music):
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.bots = []
@@ -95,6 +95,8 @@ class Tasks:
             "print" : pygame.image.load("assets/dev_buttons/print.png")
         }
 
+        self.music = music
+
 
     def raid_bot(self, duration=60, nb=200):
         """
@@ -102,6 +104,7 @@ class Tasks:
         (200 as default) in a duration time of 60 as default.
         """
 
+        self.stop_music()
 
         start = time.time()
         s = time.time()
@@ -163,6 +166,7 @@ class Tasks:
         He has a maximum duration time (600 secondes as default)
         """
 
+        self.stop_music()
 
         start = time.time()
         bg = pygame.image.load("assets/bruteforce.jpg")
@@ -215,6 +219,9 @@ class Tasks:
         A generator that return the messages typed in the textinput.
         It's a simple social network user interface
         """
+
+        self.stop_music()
+
         start = time.time()
         manager = pygame_textinput.TextInputManager(validator = lambda input: len(input) <= max_chars)
         textinput = pygame_textinput.TextInputVisualizer(manager=manager, font_color=(255,255,255))
@@ -259,6 +266,9 @@ class Tasks:
 
 
     def uwu(self, duration=60, nb=30):
+
+        self.stop_music()
+
         """
         A task where the player needs to type UwU a number of times
         (30 as default value) in a duration time (60 seconds as default value)
@@ -284,6 +294,7 @@ class Tasks:
         when there is a too important number of messages
         """
 
+        self.stop_music()
 
         # create instruction buttons
         buttons = {}
@@ -378,6 +389,8 @@ class Tasks:
 
     def terminalUi(self, duration=600, max_chars=100, commands=[]):
 
+        self.stop_music()
+
         start = time.time()
         manager = pygame_textinput.TextInputManager(validator = lambda input: len(input) <= max_chars)
         textinput = pygame_textinput.TextInputVisualizer(manager=manager, font_color=(255,255,255))
@@ -417,6 +430,8 @@ class Tasks:
 
     def cheat(self, duration=3600):
 
+        self.stop_music()
+
         start = time.time()
         edit_me = "MY NEW VALUE NEEDS TO BE '69' (string) IF YOU WANT TO WIN"
 
@@ -444,3 +459,8 @@ class Tasks:
 
     def nothing(self):
         pass
+
+
+    def stop_music(self):
+
+        self.music.stop()

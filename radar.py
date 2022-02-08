@@ -27,12 +27,17 @@ class Radar:
             else:
                 self.radar_pos = (20, 20)
 
+        self.stop = False
+
 
     def switch(self, map):
         self.map = pygame.image.load(map)
 
 
     def update(self, pos):
+
+        if self.stop: return
+
         position = [5 + self.radar_pos[0] + pos[0] // 5, 5 + self.radar_pos[1] + pos[1] // 5]
         self.screen.blit(self.map, self.radar_pos)
         pygame.draw.circle(self.screen, (0, 0, 0), position, 2)

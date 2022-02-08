@@ -405,7 +405,7 @@
   <object id="98" name="exit_spawn_house6" x="559" y="203">
    <point/>
   </object>
-  <object id="100" name="exit_spawn_house7" x="715" y="154">
+  <object id="100" name="exit_spawn_house0" x="715" y="154">
    <point/>
   </object>
   <object id="101" name="enter_house2" x="616.25" y="707.5" width="18.25" height="22.75"/>
@@ -413,6 +413,6 @@
   <object id="103" name="enter_house4" x="408" y="451.5" width="16.25" height="24"/>
   <object id="104" name="enter_house5" x="202.5" y="401.75" width="15.25" height="23"/>
   <object id="105" name="enter_house6" x="535.5" y="147.5" width="18.25" height="21"/>
-  <object id="106" name="enter_house7" x="714.25" y="98" width="15" height="22.5"/>
+  <object id="106" name="enter_house0" x="714.25" y="98" width="15" height="22.5"/>
  </objectgroup>
 </map>

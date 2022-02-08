@@ -3,14 +3,19 @@ from player import Player
 from screens import Screens
 from tasks import Tasks
 from radar import Radar
+from music import Music
 
 
 class Game:
 
     def __init__(self):
+
+        self.music = Music()
+
         self.screen = pygame.display.set_mode((800,800))
 
         self.screens = Screens(self.screen)
+        self.screens.music = self.music
 
         pygame.display.set_caption("SocialNetwork Simulator")
 
@@ -42,13 +47,13 @@ class Game:
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=5)
         self.group.add(self.player)
 
-        self.task = Tasks(self.screen)
+        self.task = Tasks(self.screen, self.music)
         self.task_panels = []
 
         self.house_rects = []
-        for i in range(1,8):
+        for i in range(7):
             enter_house = tmx_data.get_object_by_name("enter_house" + str(i))
-            self.house_rects.append((pygame.Rect(enter_house.x, enter_house.y, enter_house.width, enter_house.height), "house" + str(i-1)))
+            self.house_rects.append((pygame.Rect(enter_house.x, enter_house.y, enter_house.width, enter_house.height), "house" + str(i)))
         
         self.radar = Radar(self.screen, side=1)
         self.stopped_since = time.time()
@@ -86,7 +91,7 @@ class Game:
             house_objs.append((tmx_data.get_object_by_name("exit_house"), None))
         
         else:
-            for i in range(1,8):
+            for i in range(7):
                 house_objs.append((tmx_data.get_object_by_name("enter_house" + str(i)), "house" + str(i)))
         
         for house_obj, house in house_objs:
@@ -95,8 +100,13 @@ class Game:
         spawn = tmx_data.get_object_by_name("spawn_house") if self.map == "house" else tmx_data.get_object_by_name("exit_spawn_" + self.house)
         self.player.position = [spawn.x, spawn.y-20]
 
-        path = "assets/map_radar.png" if self.map == "world" else "assets/house_radar.png"
-        self.radar.switch(path)
+        if self.map == "world":
+            self.radar.stop = False
+            self.radar.switch("assets/map_radar.png")
+
+        else:
+            self.radar.stop = True
+            self.music.stop()
 
 
 
@@ -210,6 +220,9 @@ class Game:
         clock = pygame.time.Clock()
         running = True
         while running:
+
+            if self.map == "world": self.music.lobby()
+
             if not self.handle_input(): return
 
             self.group.update()
@@ -241,6 +254,9 @@ class Game:
                     
                     else:
                         self.player.infos["defeats"] += 1
+
+                    self.player.position[0] += 5
+                    self.player.position[1] +=5
 
 
             for event in pygame.event.get():
