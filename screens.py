@@ -18,7 +18,7 @@ class Screens:
 
     def defeat(self):
 
-        self.stop_music()
+        self.music.stop()
 
         self.play_button = Button((400,400), self.play_image, self.screen)
         self.exit_button = Button((120,200), self.exit_image, self.screen)
@@ -52,7 +52,7 @@ class Screens:
 
     def victory(self):
 
-        self.stop_music()
+        self.music.stop()
 
         self.play_button = Button((400,400), self.play_image, self.screen)
         self.exit_button = Button((120,200), self.exit_image, self.screen)
@@ -86,7 +86,7 @@ class Screens:
 
     def menu(self):
 
-        self.stop_music()
+        self.music.change_vol(0.25)
 
         self.exit_button = Button((400,400), self.exit_image, self.screen)
         self.play_button = Button((120,200), self.play_image, self.screen)
@@ -96,9 +96,11 @@ class Screens:
             self.screen.blit(self.menu_image, (0,0))
 
             if self.play_button.draw():
+                self.music.change_vol()
                 return True
 
             if self.exit_button.draw():
+                self.music.change_vol()
                 return False
 
             for event in pygame.event.get():
@@ -208,8 +210,3 @@ class Screens:
 
             pygame.display.flip()
             self.clock.tick(60)
-
-
-    def stop_music(self):
-
-        self.music.stop()

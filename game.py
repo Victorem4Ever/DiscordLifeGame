@@ -106,7 +106,7 @@ class Game:
 
         else:
             self.radar.stop = True
-            self.music.stop()
+            self.music.stop(100)
 
 
 

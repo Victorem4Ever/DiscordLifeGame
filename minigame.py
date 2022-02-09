@@ -171,6 +171,35 @@ class Minigame:
             self.clock.tick(60)
 
 
+    def tictactoe(self):
+
+        coordonates = [
+            ((0, int(self.y * 1/3)), (self.x, int(self.y * 1/3))),
+            ((0, int(self.y * 2/3)), (self.x, int(self.y * 2/3))),
+            ((int(self.x * 1/3), 0), (int(self.x * 1/3), self.y)),
+            ((int(self.x * 2/3), 0), (int(self.x * 2/3), self.y))
+        ]
+
+        running = True
+        while running:
+
+            self.screen.fill((69,69,69))
+
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    running = False
+                    return False
+
+            for start, end in coordonates:
+                pygame.draw.line(self.screen, (255,255,255), start, end, 5)
+
+            pygame.display.flip()
+            self.clock.tick(60)
+
+
+
+
     def disp_score(self, score):
 
         running = True
@@ -193,3 +222,10 @@ class Minigame:
             
             pygame.display.flip()
             self.clock.tick(60)
+
+if __name__ == "__main__":
+
+    pygame.init()
+    screen = pygame.display.set_mode((800,800))
+    minigame = Minigame(screen)
+    minigame.tictactoe()
