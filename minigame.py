@@ -160,8 +160,8 @@ class Minigame:
             if ball.move(pos[0][0][1], pos[1][0][1]):
                 player = abs(player-1)
                 score += 1
-                ball.x_velocity += 0.1
-                ball.y_velocity += 0.1
+                ball.x_velocity *= 1.05
+                ball.y_velocity *= 1.05
             
             ball.draw()
             pygame.draw.line(self.screen, (255, 255, 255), pos[0][0], pos[0][1], 5)
@@ -228,4 +228,4 @@ if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((800,800))
     minigame = Minigame(screen)
-    minigame.tictactoe()
+    minigame.pong()
